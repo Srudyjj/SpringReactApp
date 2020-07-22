@@ -1,5 +1,6 @@
 package com.turbinist.demo.student;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,23 +13,15 @@ import java.util.UUID;
 @RequestMapping("students")
 public class StudentController {
 
+    private final StudentService studentService;
+
+    @Autowired
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
+
     @GetMapping
     public List<Student> getAllStudents() {
-        return Arrays.asList(
-                new Student(
-                        UUID.randomUUID(),
-                        "James",
-                        "Bond",
-                        "jamesbond@email.com",
-                        Student.Gender.MALE
-                ),
-                new Student(
-                        UUID.randomUUID(),
-                        "Elisa",
-                        "Tamara",
-                        "jamesbond@email.com",
-                        Student.Gender.FEMALE
-                )
-        );
+        return studentService.getAllStudents();
     }
 }
