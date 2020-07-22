@@ -1,7 +1,7 @@
 import React from "react";
 
 const Container = (props) => (
-  <div style={{ maxWidth: "1400px", margin: "0 auto", textAlign: "center" }}>
+  <div style={{ maxWidth: "1400px", margin: "0 auto", textAlign: "center" }} >
     {props.children}
   </div>
 );

@@ -3,6 +3,7 @@ import "./App.css";
 import { getAllStudents } from "./client";
 import { Table, Avatar, Spin } from "antd";
 import Container from "./Container";
+import Footer from "./Footer";
 import { LoadingOutlined } from "@ant-design/icons";
 
 const columns = [
@@ -75,11 +76,13 @@ function App() {
     return (
       <Container>
         <Table
+          style={{ paddingBottom: "5em" }}
           dataSource={students}
           columns={columns}
           rowKey="studentId"
           pagination={false}
         />
+        <Footer numberOfStudents={students.length} />
       </Container>
     );
   }
