@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { getAllStudents } from "./client";
-import { Table, Avatar, Spin } from "antd";
+import { Table, Avatar, Spin, Modal } from "antd";
 import Container from "./Container";
 import Footer from "./Footer";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -47,6 +47,9 @@ const columns = [
 function App() {
   const [students, setStudents] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
+  const [isAddStudentModalVisible, setIsAddStudentModalVisible] = useState(
+    false
+  );
 
   useEffect(() => {
     fetchStudents();
@@ -61,6 +64,9 @@ function App() {
         setStudents(students);
       });
   }
+
+  const openAddStudentModal = () => setIsAddStudentModalVisible(true);
+  const closeAddStudentModal = () => setIsAddStudentModalVisible(false);
 
   const getIcon = () => <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
@@ -82,7 +88,15 @@ function App() {
           rowKey="studentId"
           pagination={false}
         />
-        <Footer numberOfStudents={students.length} />
+        <Modal
+          title="Add new student"
+          visible={isAddStudentModalVisible}
+          onOk={closeAddStudentModal}
+          onCancel={closeAddStudentModal}
+        >
+          <p>Some contents...</p>
+        </Modal>
+        <Footer numberOfStudents={students.length} onAddClick={openAddStudentModal} />
       </Container>
     );
   }
