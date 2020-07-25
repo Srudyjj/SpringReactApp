@@ -95,7 +95,6 @@ function App() {
           onOk={closeAddStudentModal}
           onCancel={closeAddStudentModal}
         >
-          <p>Some contents...</p>
           <AddStudentForm/>
         </Modal>
         <Footer numberOfStudents={students.length} onAddClick={openAddStudentModal}/>

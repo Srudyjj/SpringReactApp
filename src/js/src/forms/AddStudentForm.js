@@ -1,8 +1,8 @@
 import React from "react";
-import { Formik } from "formik";
-import { Button, Input, Select, Tag } from "antd";
+import { Field, Formik } from "formik";
+import { Button, Input, Tag } from "antd";
+import { addNewStudent } from "../client";
 
-const { Option } = Select;
 const inputBottomMargin = { marginBottom: '5px' };
 const tagStyle = {
   backgroundColor: '#f50',
@@ -34,11 +34,11 @@ const AddStudentForm = () => (
       }
       return errors;
     }}
-    onSubmit={(values, { setSubmitting }) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
+    onSubmit={(student, { setSubmitting }) => {
+      addNewStudent(student).then(res => {
+        alert(JSON.stringify(student));
         setSubmitting(false);
-      }, 400);
+      })
     }}
   >
     {({
@@ -49,7 +49,8 @@ const AddStudentForm = () => (
         handleBlur,
         handleSubmit,
         isSubmitting,
-        submitForm
+        submitForm,
+        isValid
         /* and other goodies */
       }) => (
       <form onSubmit={handleSubmit}>
@@ -87,20 +88,24 @@ const AddStudentForm = () => (
         {errors.email && touched.email &&
         <Tag style={tagStyle}>{errors.email}</Tag>}
 
-        <Select
+        <Field
           name="gender"
+          as="select"
           onChange={handleChange}
           onBlur={handleBlur}
           value={values.gender}
           style={{ width: 120, display: "block", marginBottom: 15 }}
           placeholder="Gender"
         >
-          <Option value="female">Female</Option>
-          <Option value="male">Male</Option>
-        </Select>
+          <option value="FEMALE">Female</option>
+          <option value="MALE">Male</option>
+        </Field>
         {errors.gender && touched.gender &&
         <Tag style={tagStyle}>{errors.gender}</Tag>}
-        <Button onClick={() => submitForm()} type="submit" disabled={isSubmitting}>
+        <Button
+          onClick={() => submitForm()}
+          type="submit"
+          disabled={isSubmitting | (touched && !isValid)}>
           Submit
         </Button>
       </form>
