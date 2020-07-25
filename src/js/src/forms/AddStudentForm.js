@@ -10,7 +10,7 @@ const tagStyle = {
   ...inputBottomMargin
 };
 
-const AddStudentForm = () => (
+const AddStudentForm = (props) => (
   <Formik
     initialValues={{ firstName: '', lastName: '', gender: '', email: '' }}
     validate={values => {
@@ -36,7 +36,7 @@ const AddStudentForm = () => (
     }}
     onSubmit={(student, { setSubmitting }) => {
       addNewStudent(student).then(res => {
-        alert(JSON.stringify(student));
+        props.onSuccess();
         setSubmitting(false);
       })
     }}
@@ -88,6 +88,7 @@ const AddStudentForm = () => (
         {errors.email && touched.email &&
         <Tag style={tagStyle}>{errors.email}</Tag>}
 
+        //TODO: Fix select
         <Field
           name="gender"
           as="select"

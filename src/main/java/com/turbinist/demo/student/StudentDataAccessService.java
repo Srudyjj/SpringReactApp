@@ -12,9 +12,9 @@ import java.util.UUID;
 @Repository
 public class StudentDataAccessService {
 
-    @Autowired
     private final JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public StudentDataAccessService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

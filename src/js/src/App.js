@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
-import {getAllStudents} from "./client";
-import {Avatar, Modal, Spin, Table} from "antd";
-import {LoadingOutlined} from "@ant-design/icons";
+import { getAllStudents } from "./client";
+import { Avatar, Modal, Spin, Table } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import Container from "./Container";
 import Footer from "./Footer";
 import AddStudentForm from "./forms/AddStudentForm";
@@ -46,9 +46,9 @@ const columns = [
 ];
 
 function App() {
-  const [students, setStudents] = useState([]);
-  const [isFetching, setIsFetching] = useState(false);
-  const [isAddStudentModalVisible, setIsAddStudentModalVisible] = useState(
+  const [ students, setStudents ] = useState([]);
+  const [ isFetching, setIsFetching ] = useState(false);
+  const [ isAddStudentModalVisible, setIsAddStudentModalVisible ] = useState(
     false
   );
 
@@ -69,7 +69,7 @@ function App() {
   const openAddStudentModal = () => setIsAddStudentModalVisible(true);
   const closeAddStudentModal = () => setIsAddStudentModalVisible(false);
 
-  const getIcon = () => <LoadingOutlined style={{fontSize: 24}} spin/>;
+  const getIcon = () => <LoadingOutlined style={{ fontSize: 24 }} spin/>;
 
   if (isFetching) {
     return (
@@ -83,7 +83,7 @@ function App() {
     return (
       <Container>
         <Table
-          style={{paddingBottom: "5em"}}
+          style={{ paddingBottom: "5em" }}
           dataSource={students}
           columns={columns}
           rowKey="studentId"
@@ -95,7 +95,12 @@ function App() {
           onOk={closeAddStudentModal}
           onCancel={closeAddStudentModal}
         >
-          <AddStudentForm/>
+          <AddStudentForm
+            onSuccess={() => {
+              closeAddStudentModal();
+              fetchStudents();
+            }}
+          />
         </Modal>
         <Footer numberOfStudents={students.length} onAddClick={openAddStudentModal}/>
       </Container>
