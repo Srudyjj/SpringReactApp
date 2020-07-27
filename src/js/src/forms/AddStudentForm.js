@@ -88,7 +88,8 @@ const AddStudentForm = (props) => (
         {errors.email && touched.email &&
         <Tag style={tagStyle}>{errors.email}</Tag>}
 
-        //TODO: Fix select
+        {//TODO: Fix select
+        }
         <Field
           name="gender"
           as="select"

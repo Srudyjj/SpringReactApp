@@ -6,6 +6,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import Container from "./Container";
 import Footer from "./Footer";
 import AddStudentForm from "./forms/AddStudentForm";
+import { errorNotification } from "./Notification";
 
 const columns = [
   {
@@ -61,9 +62,14 @@ function App() {
     getAllStudents()
       .then((res) => res.json())
       .then((students) => {
-        setIsFetching(false);
         setStudents(students);
-      });
+      })
+      .catch(error => {
+        const message = error.error.message;
+        const description = error.error.error;
+        errorNotification(message, description);
+      })
+      .finally(() => setIsFetching(false));
   }
 
   const openAddStudentModal = () => setIsAddStudentModalVisible(true);
