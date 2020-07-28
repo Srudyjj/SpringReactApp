@@ -20,6 +20,6 @@ public class ApiExceptionHandler {
                 BAD_REQUEST,
                 ZonedDateTime.now(ZoneId.systemDefault())
         );
-        return new ResponseEntity<>(apiException, BAD_REQUEST   );
+        return new ResponseEntity<>(apiException, BAD_REQUEST);
     }
 }

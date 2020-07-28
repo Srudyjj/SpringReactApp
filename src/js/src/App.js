@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import { getAllStudents } from "./client";
 import { Avatar, Empty, Modal, Spin, Table } from "antd";
@@ -19,6 +19,8 @@ function App() {
     fetchStudents();
   }, []);
 
+  const openAddStudentModal = () => setIsAddStudentModalVisible(true);
+
   function fetchStudents() {
     setIsFetching(true);
     getAllStudents()
@@ -34,7 +36,6 @@ function App() {
       .finally(() => setIsFetching(false));
   }
 
-  const openAddStudentModal = () => setIsAddStudentModalVisible(true);
   const closeAddStudentModal = () => setIsAddStudentModalVisible(false);
 
   const getIcon = () => <LoadingOutlined style={{ fontSize: 24 }} spin/>;
@@ -51,14 +52,35 @@ function App() {
   )
 
   const MainComponent = () => (
-    <Fragment>
-      <Table
-        style={{ paddingBottom: "5em" }}
-        dataSource={students}
-        columns={columns}
-        rowKey="studentId"
-        pagination={false}
-      />
+    <Table
+      style={{ paddingBottom: "5em" }}
+      dataSource={students}
+      columns={columns}
+      rowKey="studentId"
+      pagination={false}
+    />
+  )
+
+  const EmptyComponent = () => (
+    <div style={{
+      display: "flex",
+      flexDirection: 'column',
+      justifyContent: 'center',
+      minHeight: '100vh'
+    }}>
+      <Empty style={{ margin: '15px 0', paddingBottom: '70px' }}
+             description="No students found"/>
+    </div>
+  )
+
+  return (
+    <Container>
+      {isFetching ?
+        <LoadComponent/> :
+        ((students && students.length) ?
+          <MainComponent/> :
+          <EmptyComponent/>)
+      }
       <Modal
         title="Add new student"
         visible={isAddStudentModalVisible}
@@ -72,29 +94,6 @@ function App() {
           }}
         />
       </Modal>
-    </Fragment>
-  )
-
-  const EmptyComponent = () => (
-    <div style={{
-      display: "flex",
-      flexDirection: 'column',
-      justifyContent: 'center',
-      minHeight: '100vh'
-    }}>
-      <Empty style={{ margin: '15px 0', paddingBottom: '70px' }}
-             description={<h1>No students found</h1>}/>
-    </div>
-  )
-
-  return (
-    <Container>
-      {isFetching ?
-        <LoadComponent/> :
-        ((students && students.length) ?
-          <MainComponent/> :
-          <EmptyComponent/>)
-      }
       <Footer numberOfStudents={students.length} onAddClick={openAddStudentModal}/>
     </Container>
   );

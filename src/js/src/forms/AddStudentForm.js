@@ -35,7 +35,7 @@ const AddStudentForm = (props) => (
       return errors;
     }}
     onSubmit={(student, { setSubmitting }) => {
-      addNewStudent(student).then(res => {
+      addNewStudent(student).then(() => {
         props.onSuccess();
         setSubmitting(false);
       })
@@ -87,9 +87,6 @@ const AddStudentForm = (props) => (
         />
         {errors.email && touched.email &&
         <Tag style={tagStyle}>{errors.email}</Tag>}
-
-        {//TODO: Fix select
-        }
         <Field
           name="gender"
           as="select"
@@ -107,7 +104,7 @@ const AddStudentForm = (props) => (
         <Button
           onClick={() => submitForm()}
           type="submit"
-          disabled={isSubmitting | (touched && !isValid)}>
+          disabled={isSubmitting || (touched && !isValid)}>
           Submit
         </Button>
       </form>

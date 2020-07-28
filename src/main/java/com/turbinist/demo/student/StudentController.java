@@ -1,5 +1,6 @@
 package com.turbinist.demo.student;
 
+import com.turbinist.demo.exeption.ApiRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,9 @@ public class StudentController {
 
     @GetMapping
     public List<Student> getAllStudents() {
-        return studentService.getAllStudents();
+
+        throw new ApiRequestException("Oops can't get all students");
+//        return studentService.getAllStudents();
     }
 
     @PostMapping
