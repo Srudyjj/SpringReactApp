@@ -1,16 +1,26 @@
 package com.turbinist.demo.student;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.lang.NonNull;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
 public class Student {
 
     private final UUID studentId;
 
+    @NotBlank
     private final String firstName;
+
+    @NotBlank
     private final String lastName;
+
+    @Email
     private final String email;
+
+    @NonNull
     private final Gender gender;
 
     enum Gender {
