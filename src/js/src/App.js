@@ -1,12 +1,105 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import "./App.css";
 import { getAllStudents } from "./client";
-import { Avatar, Modal, Spin, Table } from "antd";
+import { Avatar, Empty, Modal, Spin, Table } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import Container from "./Container";
 import Footer from "./Footer";
 import AddStudentForm from "./forms/AddStudentForm";
 import { errorNotification } from "./Notification";
+
+function App() {
+  const [ students, setStudents ] = useState([]);
+  const [ isFetching, setIsFetching ] = useState(false);
+  const [ isAddStudentModalVisible, setIsAddStudentModalVisible ] = useState(
+    false
+  );
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  function fetchStudents() {
+    setIsFetching(true);
+    getAllStudents()
+      .then((res) => res.json())
+      .then((students) => {
+        setStudents(students);
+      })
+      .catch(error => {
+        const message = error.error.message;
+        const description = error.error.error;
+        errorNotification(message, description);
+      })
+      .finally(() => setIsFetching(false));
+  }
+
+  const openAddStudentModal = () => setIsAddStudentModalVisible(true);
+  const closeAddStudentModal = () => setIsAddStudentModalVisible(false);
+
+  const getIcon = () => <LoadingOutlined style={{ fontSize: 24 }} spin/>;
+
+  const LoadComponent = () => (
+    <div style={{
+      display: "flex",
+      flexDirection: 'column',
+      justifyContent: 'center',
+      minHeight: '100vh'
+    }}>
+      <Spin indicator={getIcon()}/>
+    </div>
+  )
+
+  const MainComponent = () => (
+    <Fragment>
+      <Table
+        style={{ paddingBottom: "5em" }}
+        dataSource={students}
+        columns={columns}
+        rowKey="studentId"
+        pagination={false}
+      />
+      <Modal
+        title="Add new student"
+        visible={isAddStudentModalVisible}
+        onOk={closeAddStudentModal}
+        onCancel={closeAddStudentModal}
+      >
+        <AddStudentForm
+          onSuccess={() => {
+            closeAddStudentModal();
+            fetchStudents();
+          }}
+        />
+      </Modal>
+    </Fragment>
+  )
+
+  const EmptyComponent = () => (
+    <div style={{
+      display: "flex",
+      flexDirection: 'column',
+      justifyContent: 'center',
+      minHeight: '100vh'
+    }}>
+      <Empty style={{ margin: '15px 0', paddingBottom: '70px' }}
+             description={<h1>No students found</h1>}/>
+    </div>
+  )
+
+  return (
+    <Container>
+      {isFetching ?
+        <LoadComponent/> :
+        ((students && students.length) ?
+          <MainComponent/> :
+          <EmptyComponent/>)
+      }
+      <Footer numberOfStudents={students.length} onAddClick={openAddStudentModal}/>
+    </Container>
+  );
+
+}
 
 const columns = [
   {
@@ -45,75 +138,5 @@ const columns = [
     key: "gender",
   },
 ];
-
-function App() {
-  const [ students, setStudents ] = useState([]);
-  const [ isFetching, setIsFetching ] = useState(false);
-  const [ isAddStudentModalVisible, setIsAddStudentModalVisible ] = useState(
-    false
-  );
-
-  useEffect(() => {
-    fetchStudents();
-  }, []);
-
-  function fetchStudents() {
-    setIsFetching(true);
-    getAllStudents()
-      .then((res) => res.json())
-      .then((students) => {
-        setStudents(students);
-      })
-      .catch(error => {
-        const message = error.error.message;
-        const description = error.error.error;
-        errorNotification(message, description);
-      })
-      .finally(() => setIsFetching(false));
-  }
-
-  const openAddStudentModal = () => setIsAddStudentModalVisible(true);
-  const closeAddStudentModal = () => setIsAddStudentModalVisible(false);
-
-  const getIcon = () => <LoadingOutlined style={{ fontSize: 24 }} spin/>;
-
-  if (isFetching) {
-    return (
-      <Container>
-        <Spin indicator={getIcon()}/>
-      </Container>
-    );
-  }
-
-  if (students && students.length) {
-    return (
-      <Container>
-        <Table
-          style={{ paddingBottom: "5em" }}
-          dataSource={students}
-          columns={columns}
-          rowKey="studentId"
-          pagination={false}
-        />
-        <Modal
-          title="Add new student"
-          visible={isAddStudentModalVisible}
-          onOk={closeAddStudentModal}
-          onCancel={closeAddStudentModal}
-        >
-          <AddStudentForm
-            onSuccess={() => {
-              closeAddStudentModal();
-              fetchStudents();
-            }}
-          />
-        </Modal>
-        <Footer numberOfStudents={students.length} onAddClick={openAddStudentModal}/>
-      </Container>
-    );
-  }
-
-  return <h1>No students found</h1>;
-}
 
 export default App;
