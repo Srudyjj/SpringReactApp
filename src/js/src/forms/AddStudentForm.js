@@ -2,6 +2,7 @@ import React from "react";
 import { Field, Formik } from "formik";
 import { Button, Input, Tag } from "antd";
 import { addNewStudent } from "../client";
+import { errorNotification } from "../Notification";
 
 const inputBottomMargin = { marginBottom: '5px' };
 const tagStyle = {
@@ -35,10 +36,16 @@ const AddStudentForm = (props) => (
       return errors;
     }}
     onSubmit={(student, { setSubmitting }) => {
-      addNewStudent(student).then(() => {
-        props.onSuccess();
-        setSubmitting(false);
-      })
+      addNewStudent(student)
+        .then(() => {
+          props.onSuccess();
+          setSubmitting(false);
+        })
+        .catch(err => {
+          const message = err.error.message;
+          const description = err.error.error;
+          errorNotification(message, description);
+        })
     }}
   >
     {({
