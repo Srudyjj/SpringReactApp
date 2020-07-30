@@ -60,4 +60,14 @@ public class StudentDataAccessService {
                 student.getEmail(),
                 student.getGender().name().toUpperCase());
     }
+
+    boolean isEmailExists(String email) {
+        String sql = "SELECT EXISTS ( " +
+                "SELECT 1 FROM STUDENT " +
+                "WHERE email = ? )";
+        return jdbcTemplate.queryForObject(
+                sql,
+                new Object[]{email},
+                (rs, i) -> rs.getBoolean(1));
+    }
 }

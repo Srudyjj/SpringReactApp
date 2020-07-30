@@ -36,7 +36,10 @@ public class StudentService {
         if (!emailValidator.test(student.getEmail())) {
             throw new ApiRequestException(student.getEmail() + " is not valid");
         }
-        //TODO: Verify that email is not taken
+
+        if (studentDataAccessService.isEmailExists(student.getEmail())) {
+            throw new ApiRequestException(student.getEmail() + " already exists");
+        }
 
         studentDataAccessService.insertStudent(newStudentId, student);
     }
