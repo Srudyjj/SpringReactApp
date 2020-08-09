@@ -5,8 +5,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -93,30 +93,18 @@ public class StudentDataAccessService {
     }
 
     private RowMapper<StudentCourse> studentCourseRowMapper() {
-        return (rs, rowNum) -> {
-            String studentIdStr = rs.getString("student_id");
-            UUID studentID = UUID.fromString(studentIdStr);
-            String courseIdStr = rs.getString("course_id");
-            UUID courseId = UUID.fromString(courseIdStr);
-            String name = rs.getString("name");
-            String description = rs.getString("description");
-            String department = rs.getString("department");
-            String teacherName = rs.getString("teacher_name");
-            LocalDate startDate = rs.getDate("start_date").toLocalDate();
-            LocalDate endDate = rs.getDate("end_date").toLocalDate();
-            Integer grade = rs.getInt("grade");
-
-            return new StudentCourse(
-                    studentID,
-                    courseId,
-                    name,
-                    description,
-                    department,
-                    teacherName,
-                    startDate,
-                    endDate,
-                    grade
-            );
-        };
+        return (rs, rowNum) -> new StudentCourse(
+                UUID.fromString(rs.getString("student_id")),
+                UUID.fromString(rs.getString("course_id")),
+                rs.getString("name"),
+                rs.getString("description"),
+                rs.getString("department"),
+                rs.getString("teacher_name"),
+                rs.getDate("start_date").toLocalDate(),
+                rs.getDate("end_date").toLocalDate(),
+                Optional.ofNullable(rs.getString("grade"))
+                        .map(Integer::parseInt)
+                        .orElse(null)
+        );
     }
 }
